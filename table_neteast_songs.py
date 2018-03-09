@@ -1,5 +1,8 @@
 import pandas as pd
 import re
+from urllib.request import urlretrieve
+import os
+
 regex = re.compile('\[.*?\]\[info\]player\.')
 songName = []
 albumName = []
@@ -22,3 +25,29 @@ with open('/Users/manchongleong/Library/Containers/com.netease.163music/Data/Doc
 				elif 'jpg' in splitLine:
 					albumPic.append(splitLine.split('''"''')[-2])
 
+
+""""
+musicLibrary = pd.DataFrame(
+    {'songName': songName,
+     'albumName': albumName,
+     'artistName': artistName,
+     'musicUrl': musicUrl,
+     'albumPic': albumPic,
+     })
+
+#for sN, abN, atN, mU, aP in musicLibrary.iterrows():
+for sN in musicLibrary.iterrows():
+	#print("The song going to be downloaded is: " + sN)
+	print(sN.songName)
+"""
+
+for i in range(len(songName)):
+	print("The song going to be downloaded is: " + songName[i])
+	os.chdir('/Users/manchongleong/Desktop/netEaseMusic/')
+	fileName = artistName[i] + ' - ' + songName[i] + '.mp3'
+	#print(fileName.replace(' ','\ '))
+	#urlretrieve(musicUrl[i], fileName.replace(' ','\ ').replace('/','_'))
+	try:
+		urlretrieve(musicUrl[i], songName[i] + '.mp3')
+	except urllib.error.HTTPError as e:
+		print("There is a error: " + e)
