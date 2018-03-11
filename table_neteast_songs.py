@@ -56,21 +56,8 @@ if __name__ == '__main__':
 		#os.chdir('/Users/manchongleong/Desktop/netEaseMusic/')
 		os.chdir(args.d)
 		fileName = artistName[i] + ' - ' + songName[i] + '.mp3'
-		if (args.n in fileName):
-			print("The song going to be downloaded is: " + songName[i])
-		#print(fileName.replace(' ','\ '))
-		#urlretrieve(musicUrl[i], fileName.replace(' ','\ ').replace('/','_'))
-			try:
-				if args.c == 'trad':
-					urlretrieve(musicUrl[i], HanziConv.toTraditional(fileName.replace('/','_')))
-					print("Downlod " + HanziConv.toTraditional(fileName) + " successfully!\n\n")
-				else:
-					urlretrieve(musicUrl[i], fileName.replace('/','_'))
-					print("Downlod " + fileName + " successfully!\n\n")
-			except HTTPError as e:
-				print(e)
-				print("Your link for this song is expired, please listen to that song again to renew the name.\n\n")
-		else:
+
+		if args.n == '.ALL':
 			print("The song going to be downloaded is: " + songName[i])
 			try:
 				if args.c == 'trad':
@@ -82,6 +69,21 @@ if __name__ == '__main__':
 			except HTTPError as e:
 				print(e)
 				print("Your link for this song is expired, please listen to that song again to renew the name.\n\n")
+		else:
+			if (args.n in fileName):
+				print("The song going to be downloaded is: " + songName[i])
+			#print(fileName.replace(' ','\ '))
+			#urlretrieve(musicUrl[i], fileName.replace(' ','\ ').replace('/','_'))
+				try:
+					if args.c == 'trad':
+						urlretrieve(musicUrl[i], HanziConv.toTraditional(fileName.replace('/','_')))
+						print("Downlod " + HanziConv.toTraditional(fileName) + " successfully!\n\n")
+					else:
+						urlretrieve(musicUrl[i], fileName.replace('/','_'))
+						print("Downlod " + fileName + " successfully!\n\n")
+				except HTTPError as e:
+					print(e)
+					print("Your link for this song is expired, please listen to that song again to renew the name.\n\n")
 
 """"
 musicLibrary = pd.DataFrame(
