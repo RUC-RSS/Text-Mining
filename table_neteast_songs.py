@@ -4,6 +4,7 @@ from urllib.request import urlretrieve
 from urllib.error import HTTPError
 import os
 import argparse
+from hanziconv import HanziConv
 
 regex = re.compile('\[.*?\]\[info\]player\.')
 songName = []
@@ -16,21 +17,23 @@ artistName = []
 def find(name, path):
     for root, dirs, files in os.walk(path):
         if name in files:
-            print("Log file is found.\n")
+            print("Log file is found.")
             print("It is in " + os.path.join(root, name) + "\n\n\n")
             return os.path.join(root, name)
 
 
 if __name__ == '__main__':
 	print('Going to find your log file, it will take a while....')
-	logPath = find('music.163.log', '/')
+
 
 	parser = argparse.ArgumentParser(description="enter a the log file location and the destinatiton")
-	#parser.add_argument("-l", help="enter the location of log file")
-	parser.add_argument("-d", help="enter the location of the destination")
-	parser.add_argument("-n", help="enter the name of the song or artist")
+	parser.add_argument("-l", help="enter the location of log file", default='/')
+	parser.add_argument("-d", help="enter the location of the destination", default=os.getcwd())
+	parser.add_argument("-n", help="enter the name of the song or artist", default='.ALL')
+	parser.add_argument("-c", help="traditional or simplified chinese", default='simp')
 	args = parser.parse_args()
 
+	logPath = find('music.163.log', args.l)
 	#with open('/Users/manchongleong/Library/Containers/com.netease.163music/Data/Documents/storage/Logs/music.163.log') as inputfile:
 	#with open(args.l) as inputfile:
 	with open(logPath) as inputfile:
@@ -58,12 +61,27 @@ if __name__ == '__main__':
 		#print(fileName.replace(' ','\ '))
 		#urlretrieve(musicUrl[i], fileName.replace(' ','\ ').replace('/','_'))
 			try:
-				urlretrieve(musicUrl[i], fileName.replace('/','_'))
-				print("Downlod " + fileName + " successfully!\n\n")
+				if args.c == 'trad':
+					urlretrieve(musicUrl[i], HanziConv.toTraditional(fileName.replace('/','_')))
+					print("Downlod " + HanziConv.toTraditional(fileName) + " successfully!\n\n")
+				else:
+					urlretrieve(musicUrl[i], fileName.replace('/','_'))
+					print("Downlod " + fileName + " successfully!\n\n")
 			except HTTPError as e:
 				print(e)
 				print("Your link for this song is expired, please listen to that song again to renew the name.\n\n")
-
+		else:
+			print("The song going to be downloaded is: " + songName[i])
+			try:
+				if args.c == 'trad':
+					urlretrieve(musicUrl[i], HanziConv.toTraditional(fileName.replace('/', '_')))
+					print("Downlod " + HanziConv.toTraditional(fileName) + " successfully!\n\n")
+				else:
+					urlretrieve(musicUrl[i], fileName.replace('/', '_'))
+					print("Downlod " + fileName + " successfully!\n\n")
+			except HTTPError as e:
+				print(e)
+				print("Your link for this song is expired, please listen to that song again to renew the name.\n\n")
 
 """"
 musicLibrary = pd.DataFrame(
@@ -80,8 +98,3 @@ for sN in musicLibrary.iterrows():
 	print(sN.songName)
 """
 
-
-def find(name, path):
-    for root, dirs, files in os.walk(path):
-        if name in files:
-            return os.path.join(root, name)
