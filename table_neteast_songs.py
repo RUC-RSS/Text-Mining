@@ -16,12 +16,13 @@ artistName = []
 def find(name, path):
     for root, dirs, files in os.walk(path):
         if name in files:
-            print("Log file is found.")
+            print("Log file is found.\n")
+            print("It is in " + os.path.join(root, name) + "\n\n\n")
             return os.path.join(root, name)
 
 
 if __name__ == '__main__':
-
+	print('Going to find your log file, it will take a while....')
 	logPath = find('music.163.log', '/')
 
 	parser = argparse.ArgumentParser(description="enter a the log file location and the destinatiton")
@@ -55,9 +56,10 @@ if __name__ == '__main__':
 		#urlretrieve(musicUrl[i], fileName.replace(' ','\ ').replace('/','_'))
 		try:
 			urlretrieve(musicUrl[i], fileName.replace('/','_'))
-			print("Downlod " + fileName + " successfully!\n")
+			print("Downlod " + fileName + " successfully!\n\n")
 		except HTTPError as e:
 			print(e)
+			print("Your link for this song is expired, please listen to that song again to renew the name.\n\n")
 
 
 """"
