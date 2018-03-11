@@ -28,6 +28,7 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description="enter a the log file location and the destinatiton")
 	#parser.add_argument("-l", help="enter the location of log file")
 	parser.add_argument("-d", help="enter the location of the destination")
+	parser.add_argument("-n", help="enter the name of the song or artist")
 	args = parser.parse_args()
 
 	#with open('/Users/manchongleong/Library/Containers/com.netease.163music/Data/Documents/storage/Logs/music.163.log') as inputfile:
@@ -48,18 +49,20 @@ if __name__ == '__main__':
 						albumPic.append(splitLine.split('''"''')[-2])
 
 	for i in range(len(musicUrl)):
-		print("The song going to be downloaded is: " + songName[i])
+
 		#os.chdir('/Users/manchongleong/Desktop/netEaseMusic/')
 		os.chdir(args.d)
 		fileName = artistName[i] + ' - ' + songName[i] + '.mp3'
+		if (args.n in fileName):
+			print("The song going to be downloaded is: " + songName[i])
 		#print(fileName.replace(' ','\ '))
 		#urlretrieve(musicUrl[i], fileName.replace(' ','\ ').replace('/','_'))
-		try:
-			urlretrieve(musicUrl[i], fileName.replace('/','_'))
-			print("Downlod " + fileName + " successfully!\n\n")
-		except HTTPError as e:
-			print(e)
-			print("Your link for this song is expired, please listen to that song again to renew the name.\n\n")
+			try:
+				urlretrieve(musicUrl[i], fileName.replace('/','_'))
+				print("Downlod " + fileName + " successfully!\n\n")
+			except HTTPError as e:
+				print(e)
+				print("Your link for this song is expired, please listen to that song again to renew the name.\n\n")
 
 
 """"
