@@ -46,7 +46,7 @@ if __name__ == '__main__':
 					elif 'jpg' in splitLine:
 						albumPic.append(splitLine.split('''"''')[-2])
 
-	for i in range(len(songName)):
+	for i in range(len(musicUrl)):
 		print("The song going to be downloaded is: " + songName[i])
 		#os.chdir('/Users/manchongleong/Desktop/netEaseMusic/')
 		os.chdir(args.d)
