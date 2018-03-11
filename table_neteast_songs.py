@@ -12,15 +12,26 @@ musicUrl = []
 albumPic = []
 artistName = []
 
+
+def find(name, path):
+    for root, dirs, files in os.walk(path):
+        if name in files:
+            print("Log file is found.")
+            return os.path.join(root, name)
+
+
 if __name__ == '__main__':
 
+	logPath = find('music.163.log', '/')
+
 	parser = argparse.ArgumentParser(description="enter a the log file location and the destinatiton")
-	parser.add_argument("-l", help="enter the location of log file")
+	#parser.add_argument("-l", help="enter the location of log file")
 	parser.add_argument("-d", help="enter the location of the destination")
 	args = parser.parse_args()
 
 	#with open('/Users/manchongleong/Library/Containers/com.netease.163music/Data/Documents/storage/Logs/music.163.log') as inputfile:
-	with open(args.l) as inputfile:
+	#with open(args.l) as inputfile:
+	with open(logPath) as inputfile:
 		for line in inputfile:
 			if re.search(regex, line):
 				for splitLine in line.split(''','''):
@@ -34,6 +45,19 @@ if __name__ == '__main__':
 						musicUrl.append(splitLine.split('''"''')[-2])
 					elif 'jpg' in splitLine:
 						albumPic.append(splitLine.split('''"''')[-2])
+
+	for i in range(len(songName)):
+		print("The song going to be downloaded is: " + songName[i])
+		#os.chdir('/Users/manchongleong/Desktop/netEaseMusic/')
+		os.chdir(args.d)
+		fileName = artistName[i] + ' - ' + songName[i] + '.mp3'
+		#print(fileName.replace(' ','\ '))
+		#urlretrieve(musicUrl[i], fileName.replace(' ','\ ').replace('/','_'))
+		try:
+			urlretrieve(musicUrl[i], fileName.replace('/','_'))
+			print("Downlod " + fileName + " successfully!\n")
+		except HTTPError as e:
+			print(e)
 
 
 """"
@@ -51,14 +75,8 @@ for sN in musicLibrary.iterrows():
 	print(sN.songName)
 """
 
-	for i in range(len(songName)):
-		print("The song going to be downloaded is: " + songName[i])
-		#os.chdir('/Users/manchongleong/Desktop/netEaseMusic/')
-		os.chdir(args.d)
-		fileName = artistName[i] + ' - ' + songName[i] + '.mp3'
-		#print(fileName.replace(' ','\ '))
-		#urlretrieve(musicUrl[i], fileName.replace(' ','\ ').replace('/','_'))
-		try:
-			urlretrieve(musicUrl[i], fileName.replace('/','_'))
-		except urllib.error.HTTPError as e:
-			print(e)
+
+def find(name, path):
+    for root, dirs, files in os.walk(path):
+        if name in files:
+            return os.path.join(root, name)
