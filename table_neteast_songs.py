@@ -5,6 +5,16 @@ from urllib.error import HTTPError
 import os
 import argparse
 from hanziconv import HanziConv
+import signal
+
+class TimeoutException(Exception):   # Custom exception class
+    pass
+
+def timeout_handler(signum, frame):   # Custom signal handler
+    raise TimeoutException
+
+# Change the behavior of SIGALRM
+signal.signal(signal.SIGALRM, timeout_handler)
 
 regex = re.compile('\[.*?\]\[info\]player\.')
 songName = []
@@ -60,6 +70,7 @@ if __name__ == '__main__':
 		if args.n == '.ALL':
 			print("The song going to be downloaded is: " + songName[i])
 			try:
+				signal.alarm(50)
 				if args.c == 'trad':
 					urlretrieve(musicUrl[i], HanziConv.toTraditional(fileName.replace('/', '_')))
 					print("Downlod " + HanziConv.toTraditional(fileName) + " successfully!\n\n")
@@ -69,12 +80,16 @@ if __name__ == '__main__':
 			except HTTPError as e:
 				print(e)
 				print("Your link for this song is expired, please listen to that song again to renew the name.\n\n")
+			except TimeoutException:
+				print("It took 120 secs, skip this song.\n\n")
+				continue
 		else:
 			if (args.n in fileName):
 				print("The song going to be downloaded is: " + songName[i])
 			#print(fileName.replace(' ','\ '))
 			#urlretrieve(musicUrl[i], fileName.replace(' ','\ ').replace('/','_'))
 				try:
+					signal.alarm(50)
 					if args.c == 'trad':
 						urlretrieve(musicUrl[i], HanziConv.toTraditional(fileName.replace('/','_')))
 						print("Downlod " + HanziConv.toTraditional(fileName) + " successfully!\n\n")
@@ -84,6 +99,9 @@ if __name__ == '__main__':
 				except HTTPError as e:
 					print(e)
 					print("Your link for this song is expired, please listen to that song again to renew the name.\n\n")
+				except TimeoutException:
+					print("It took 120 secs, skip this song.\n\n")
+					continue
 
 """"
 musicLibrary = pd.DataFrame(
