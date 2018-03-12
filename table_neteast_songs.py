@@ -84,7 +84,7 @@ if __name__ == '__main__':
 				print("It took 120 secs, skip this song.\n\n")
 				continue
 		else:
-			if (args.n in fileName):
+			if (HanziConv.toSimplified(args.n) in fileName):
 				print("The song going to be downloaded is: " + songName[i])
 			#print(fileName.replace(' ','\ '))
 			#urlretrieve(musicUrl[i], fileName.replace(' ','\ ').replace('/','_'))
